@@ -1,4 +1,4 @@
-﻿# Lab 3 - Containerizing the Model with Docker
+# Lab 3 - Containerizing the Model with Docker
 
 ## Question 1 - Model Registration
 
@@ -121,3 +121,9 @@ The current Windows bind-mount workaround is suitable for my local lab but is no
 The prediction was made using an image from the Bread evaluation folder. The category was incorrect, but the test verified that the container successfully loaded the model and returned a prediction.
 
 The model achieved 0.6369 test accuracy during training.
+
+## Follow-up audit — single-stage comparison
+
+**UNVERIFIED** — Docker build failed for food11-api:single-stage-lab-audit; check lab3-single-build.log
+
+This follow-up supplements the original answer to Question 5 and should not be mistaken for an earlier experiment.

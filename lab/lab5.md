@@ -160,3 +160,14 @@ uv run python src/food11/promote.py --version <candidate-version>
 
 The clean dataset and trained model artifacts live locally and are **not**
 included in the Git repository; the CI tests use the small fixture image.
+
+## Q6 follow-up — controlled repeat-run measurements
+
+The code and workflow contents were **identical** in two consecutive empty commits on the same feature branch. They therefore ran the same `test` and `smoke` workload (GHCR publishing is skipped off `main`).
+
+| CI run | Commit | Whole-run seconds | `test` seconds | `smoke` seconds | Result |
+|---|---|---:|---:|---:|---|
+| [Repeat 1](https://github.com/ghadielbasha/mlops-lab-1/actions/runs/43770799806) | `07b34b13c` | 129.0 | 21.0 | 101.0 | success |
+| [Repeat 2](https://github.com/ghadielbasha/mlops-lab-1/actions/runs/43771053166) | `44e8e4c7c` | 128.0 | 21.0 | 99.0 | success |
+
+`test` job duration changed by +0.0 seconds (second minus first). Cache benefit is not guaranteed; runner provisioning, networking and scheduling also affect times.

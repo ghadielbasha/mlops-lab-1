@@ -1,4 +1,4 @@
-﻿# Lab 1 - Git, DVC and Data Preparation
+# Lab 1 - Git, DVC and Data Preparation
 
 
 
@@ -490,6 +490,10 @@ GitHub stores the source code, configuration, and `data.dvc` pointer files.
 
 DagsHub stores the actual dataset files managed by DVC.
 
+## Follow-up audit — fresh-clone DVC verification
 
+**PASS** — Added non-secret DagsHub remote URL for fresh clones (no credentials committed)
 
+**UNVERIFIED** — Fresh clone check incomplete: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\TUF-9\\AppData\\Local\\Temp\\mlops-lab1-fresh-z9c988ub\\clone'
 
+This check uses a disposable fresh clone and does not include or publish credentials. A DVC pointer in GitHub alone does not guarantee the data can be downloaded. If the remote cannot serve the dataset, obtain Food-11 from Kaggle or provide a properly configured accessible DVC remote before claiming reproducibility.
