@@ -30,18 +30,20 @@ def parse_args():
     parser.add_argument("--epochs", type=int, default=5)
     parser.add_argument("--lr", type=float, default=0.001)
     parser.add_argument("--batch-size", type=int, default=32)
+    parser.add_argument("--data-dir", type=Path, default=None)
+    parser.add_argument("--register-name", default=None)
 
     return parser.parse_args()
 
 
-def load_data(dataset_name, batch_size):
+def load_data(dataset_name, batch_size, data_dir=None):
     folder_name = (
         "food11_processed_mini"
         if dataset_name == "mini"
         else "food11_processed"
     )
 
-    dataset_path = DATA_ROOT / folder_name
+    dataset_path = Path(data_dir) if data_dir is not None else DATA_ROOT / folder_name
 
     transform = transforms.Compose([
         transforms.Resize((128, 128)),
@@ -187,6 +189,7 @@ def main():
     train_loader, val_loader, test_loader, num_classes = load_data(
         args.dataset,
         args.batch_size,
+        args.data_dir,
     )
 
     model = create_model(num_classes, device)
@@ -258,6 +261,7 @@ def main():
             model,
             name="model",
             serialization_format="pickle",
+            registered_model_name=args.register_name,
         )
 
         print("\nTraining completed!")
