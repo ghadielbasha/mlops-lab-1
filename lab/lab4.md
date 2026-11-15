@@ -1,4 +1,4 @@
-﻿# Lab 4 - Orchestrating the App with Docker Compose
+# Lab 4 - Orchestrating the App with Docker Compose
 
 ## Implementation
 
@@ -154,3 +154,9 @@ INFO: Application startup complete.
 ## Conclusion
 
 Docker Compose successfully orchestrated MLflow, FastAPI, and Streamlit. The application supports image uploads, inference, persistent model storage, and model version changes without rebuilding the inference image.
+
+## Follow-up audit — safe volume removal experiment
+
+**PASS** — On disposable volume: down/up preserved file; down -v/up removed it
+
+The destructive `down -v` test was run ONLY on an isolated temporary Compose project and its temporary volume, never on the existing `food11-mlflow-data` model volume. The real project's volume is declared `external: true`, and Compose does not remove such an external volume through its `down -v` command.
