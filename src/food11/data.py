@@ -1,5 +1,6 @@
 from pathlib import Path
 from shutil import rmtree
+
 from PIL import Image
 
 # Project paths
@@ -29,6 +30,22 @@ CLASSES = {
 }
 
 SPLITS = ["training", "evaluation", "validation"]
+
+
+
+def category_from_filename(filename: str) -> str:
+    """Return the Food-11 category from an image filename."""
+    class_id = Path(filename).stem.split("_")[0]
+
+    if class_id not in CLASSES:
+        raise ValueError(f"Unknown class ID: {class_id}")
+
+    return CLASSES[class_id]
+
+
+def resize_image(img: Image.Image, size: int = 128) -> Image.Image:
+    """Convert an image to RGB and resize it to size x size."""
+    return img.convert("RGB").resize((size, size))
 
 
 def prepare_output_folders():

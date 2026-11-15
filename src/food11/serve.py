@@ -2,8 +2,8 @@
 import io
 import os
 from contextlib import asynccontextmanager
+from typing import Annotated
 
-import mlflow
 import mlflow.pyfunc
 import numpy as np
 import torch
@@ -11,6 +11,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from PIL import Image, UnidentifiedImageError
 from torchvision import transforms
 
+import mlflow
 
 MODEL_URI = "models:/food11@champion"
 
@@ -43,16 +44,26 @@ transform = transforms.Compose([
 ])
 
 
+model = None
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    mlflow.set_tracking_uri(TRACKING_URI)
+    global model
 
-    print(f"Connecting to MLflow: {TRACKING_URI}")
-    print(f"Loading model: {MODEL_URI}")
+    if os.getenv("SKIP_MODEL"):
+        model = None
+        print("SKIP_MODEL enabled: skipping MLflow model loading.")
+    else:
+        mlflow.set_tracking_uri(TRACKING_URI)
 
-    app.state.model = mlflow.pyfunc.load_model(MODEL_URI)
+        print(f"Connecting to MLflow: {TRACKING_URI}")
+        print(f"Loading model: {MODEL_URI}")
 
-    print("Model loaded successfully!")
+        model = mlflow.pyfunc.load_model(MODEL_URI)
+
+        print("Model loaded successfully!")
+
     yield
 
 
@@ -70,7 +81,7 @@ def health():
 
 
 @app.post("/predict")
-async def predict(file: UploadFile = File(...)):
+async def predict(file: Annotated[UploadFile, File()]):
     try:
         contents = await file.read()
         image = Image.open(io.BytesIO(contents)).convert("RGB")
@@ -82,7 +93,13 @@ async def predict(file: UploadFile = File(...)):
 
     tensor = transform(image).unsqueeze(0)
 
-    predictions = app.state.model.predict(
+    if model is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Model not loaded",
+        )
+
+    predictions = model.predict(
         tensor.numpy()
     )
 
