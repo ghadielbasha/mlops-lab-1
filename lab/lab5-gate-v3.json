@@ -1,0 +1,12 @@
+{
+  "candidate_version": 3,
+  "candidate_run_id": "9d7942f9ef09483a8c7c2e7f6878fbfb",
+  "champion_before": 2,
+  "champion_accuracy": 0.6368613138686131,
+  "candidate_accuracy": 0.10583941605839416,
+  "test_images": 1096,
+  "two_standard_errors": 0.029052493439616623,
+  "required_accuracy": 0.6659138073082297,
+  "decision": "challenger",
+  "champion_after": 2
+}
